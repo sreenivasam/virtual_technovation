@@ -15,6 +15,8 @@
 			import * as THREE from './build/three.module.js';
 
 			var camera, scene, renderer;
+			
+			var mesh_sphere;
 
 			var isUserInteracting = false,
 				onMouseDownMouseX = 0, onMouseDownMouseY = 0,
@@ -27,7 +29,7 @@
 
 			function init() {
 
-				var container, mesh;
+				var container;
 
 				container = document.getElementById( 'container' );
 
@@ -42,11 +44,27 @@
 
 				var texture = new THREE.TextureLoader().load( 'textures/entrance_01_stitch.jpg' );
 				var material = new THREE.MeshBasicMaterial( { map: texture } );
+				
+				
 
-				mesh = new THREE.Mesh( geometry, material );
+				mesh_sphere = new THREE.Mesh( geometry, material );
 
-				scene.add( mesh );
+				scene.add( mesh_sphere );
+				
+				var geometry_circle_marker = new THREE.SphereGeometry( 5, 32, 32 );
+				var material_S = new THREE.MeshBasicMaterial( {transparent: true, color: 0xffff00, opacity:0.3} );
+				var mesh_circle = new THREE.Mesh(geometry_circle_marker, material_S);
+				
+				mesh_circle.position.x = -20;
+				mesh_circle.position.y = -7;
+				mesh_circle.position.z = -7;
+				
+				mesh_circle.scale.y = .0001
+				
 
+				scene.add( mesh_circle );				
+				
+				
 				renderer = new THREE.WebGLRenderer();
 				renderer.setPixelRatio( window.devicePixelRatio );
 				renderer.setSize( window.innerWidth, window.innerHeight );
@@ -166,8 +184,28 @@
 				update();
 
 			}
+			
+			function setupKeyControls() {
+
+			  document.onkeydown = function(e) {
+				switch (e.keyCode) {
+				  case 32:
+					isUserInteracting = !isUserInteracting
+					
+							var texture = new THREE.TextureLoader().load( 'textures/at_entrance_stitch.jpg' );
+							var material = new THREE.MeshBasicMaterial( { map: texture } );
+							
+							mesh_sphere.material = material;
+				
+				
+				  break;
+				}
+			  };
+			}
 
 			function update() {
+			
+				setupKeyControls();
 
 				if ( isUserInteracting === false ) {
 
@@ -193,6 +231,8 @@
 				renderer.render( scene, camera );
 
 			}
+			
+			
 
 		</script>
 	</body>
